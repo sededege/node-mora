@@ -47,11 +47,13 @@ app.get('/feedback', function (req, res) {
   });
 });
 
-app.listen(3000, () => {
-  console.log("The server is now running on Port 8080");
-  
-});
+
 
 app.get("/", (req, res) => {
   res.send("Bienvenido/a al inicio");
 })
+
+let puerto = process.env.PORT || 3000;
+
+app.listen(puerto, () => console.log("Servidor corriendo en puerto 3000"));
+
