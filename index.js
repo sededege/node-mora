@@ -19,31 +19,81 @@ app.use(cors());
 });  */
 
 app.post("/checkout", (req, res) => {
-console.log(req.body)
+  /* console.log(req.body) */
+  /*  let preference = {
+     items: [
+         {
+             id: "item-ID-1234",
+             title: "Mi producto",
+             currency_id: "UYU",
+             picture_url: "https://www.mercadopago.com/org-img/MP3/home/logomp3.gif",
+             description: "Descripción del Item",
+             category_id: "art",
+             quantity: 1,
+             unit_price: 75.76
+         }
+     ],
+     payer: {
+         name: "Juan",
+         surname: "Lopez",
+         email: "user@email.com",
+         phone: {
+             area_code: "11",
+             number: 44444444
+         },
+         identification: {
+             type: "DNI",
+             number: "12345678"
+         },
+         address: {
+             street_name: "Street",
+             street_number: 123,
+             zip_code: "5700"
+         }
+     },
+     back_urls: {
+       success: "http://localhost:3000/feedback",
+       failure: "http://localhost:3002/feedback",
+       pending: "http://localhost:3002/feedback"
+     },
+     auto_return: "approved",
+     payment_methods: {
+         installments: 12
+     },
+     notification_url: "https://intense-forest-73258.herokuapp.com/feedback",
+     statement_descriptor: "MORAUY",
+    
+ } */
   let preference = {
     items: req.body,
+    metadata: { idorden: req.body[0].idorden },
     back_urls: {
-      "success": "http://localhost:3002/Success",
+      "success": "http://localhost:3000/feedback",
       "failure": "http://localhost:3002/feedback",
       "pending": "http://localhost:3002/feedback"
     },
     auto_return: "approved",
+    notification_url: "https://intense-forest-73258.herokuapp.com/feedback",
+    statement_descriptor: "MORAUY",
   };
+
 
   mercadopago.preferences.create(preference)
     .then(function (response) {
     /*       res.redirect(response.body.init_point);
      */      res.send(response.body.init_point)
-}).catch(function (error) {
-  console.log(error);
-});
+    }).catch(function (error) {
+      console.log(error);
+    });
 });
 
 app.get('/feedback', function (req, res) {
+  /*  const merchantOrder =  mercadopago.payment.findById(req.query.payment_id)
+   console.log(merchantOrder) */
   res.json({
     Payment: req.query.payment_id,
     Status: req.query.status,
-    MerchantOrder: req.query.merchant_order_id
+    MerchantOrder: req.query.merchant_order_id,
   });
 });
 
