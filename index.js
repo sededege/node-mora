@@ -20,7 +20,7 @@ app.use(cors());
 
 app.post("/checkout", (req, res) => {
   /* console.log(req.body) */
-  /*  let preference = {
+   let preference = {
      items: [
          {
              id: "item-ID-1234",
@@ -60,23 +60,23 @@ app.post("/checkout", (req, res) => {
      payment_methods: {
          installments: 12
      },
-     notification_url: "https://intense-forest-73258.herokuapp.com/feedback",
+     notification_url: "https://node-mora.vercel.app/Notification",
      statement_descriptor: "MORAUY",
     
- } */
-  let preference = {
+ } 
+  /* let preference = {
     items: req.body,
     metadata: { idorden: req.body[0].idorden },
     back_urls: {
-      "success": "http://localhost:3000/feedback",
+      "success": "http://localhost:3001/Ordenes",
       "failure": "http://localhost:3002/feedback",
       "pending": "http://localhost:3002/feedback"
     },
     auto_return: "approved",
-    notification_url: "https://intense-forest-73258.herokuapp.com/feedback",
+   notification_url: "https://node-mora.vercel.app/notification",
     statement_descriptor: "MORAUY",
   };
-
+ */
 
   mercadopago.preferences.create(preference)
     .then(function (response) {
@@ -87,14 +87,17 @@ app.post("/checkout", (req, res) => {
     });
 });
 
-app.get('/feedback', function (req, res) {
-  /*  const merchantOrder =  mercadopago.payment.findById(req.query.payment_id)
-   console.log(merchantOrder) */
+app.get('/Ordenes', function (req, res) {
   res.json({
     Payment: req.query.payment_id,
     Status: req.query.status,
     MerchantOrder: req.query.merchant_order_id,
   });
+});
+
+app.post('/Notification', function (req, res) {
+ console.log(req.body)
+ res.status(200).send('ok')
 });
 
 
