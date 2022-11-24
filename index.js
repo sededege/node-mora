@@ -98,12 +98,14 @@ app.post('/Notification', async function (req, res) {
     });
   }) */
 
-  /* console.log(req.body.data.id) */
+ console.log(req.body)
 
 
   const { type, data: {id}} = req.body
+  console.log(id)
+
   axios
-    .get(`https://api.mercadopago.com/v1/payments/${id}`,
+    .get(`https://api.mercadopago.com/v1/payments/1669259039028`,
       {
         headers: {
           Authorization: `Bearer TEST-4263842648119825-061517-b60e93e2733eaec4605949e6274da2e3-239337438`,
