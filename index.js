@@ -2,25 +2,29 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const mercadopago = require("mercadopago");
+const axios = require('axios');
+var bodyParser = require('body-parser');
+const db = require('./firebase_admin')
+
 
 // REPLACE WITH YOUR ACCESS TOKEN AVAILABLE IN: https://developers.mercadopago.com/panel
 mercadopago.configure({
   access_token: "TEST-4263842648119825-061517-b60e93e2733eaec4605949e6274da2e3-239337438",
 });
+const token = 'TEST-4263842648119825-061517-b60e93e2733eaec4605949e6274da2e3-239337438'
+
+
+
 
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors());
-/* app.use(express.static("../../client"));
- */
-/* app.get("/", function (req, res) {
-  res.status(200).sendFile("index.html");
-});  */
+
 
 app.post("/checkout", (req, res) => {
   /* console.log(req.body) */
-   let preference = {
+  /*  let preference = {
      items: [
          {
              id: "item-ID-1234",
@@ -60,23 +64,23 @@ app.post("/checkout", (req, res) => {
      payment_methods: {
          installments: 12
      },
-     notification_url: "https://node-mora.vercel.app/Notification",
+     notification_url: "https://intense-forest-73258.herokuapp.com/feedback",
      statement_descriptor: "MORAUY",
     
- } 
-  /* let preference = {
+ } */
+  let preference = {
     items: req.body,
     metadata: { idorden: req.body[0].idorden },
     back_urls: {
-      "success": "http://localhost:3001/Ordenes",
+      "success": "http://localhost:3000/feedback",
       "failure": "http://localhost:3002/feedback",
       "pending": "http://localhost:3002/feedback"
     },
     auto_return: "approved",
-   notification_url: "https://node-mora.vercel.app/notification",
+    notification_url: "https://node-mora.vercel.app/Notification",
     statement_descriptor: "MORAUY",
   };
- */
+
 
   mercadopago.preferences.create(preference)
     .then(function (response) {
@@ -87,17 +91,75 @@ app.post("/checkout", (req, res) => {
     });
 });
 
-app.get('/Ordenes', function (req, res) {
+app.post('/Notification', async function (req, res) {
+  /* const response = await db.collection('orders').get().then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+        console.log(`${doc.id} => ${doc.data()}`);
+    });
+  }) */
+
+  /* console.log(req.body.data.id) */
+
+  const idpayment = req.body.data.id
+  console.log(idpayment)
+  axios
+    .get(`https://api.mercadopago.com/v1/payments/${idpayment}`,
+      {
+        headers: {
+          Authorization: `Bearer TEST-4263842648119825-061517-b60e93e2733eaec4605949e6274da2e3-239337438`,
+          'Accept-Encoding': '*'
+        }
+      })
+    .then((response) => {
+     
+      const id = response.data.metadata.idorden
+      if (response.data.status === 'approved') {
+       const response = db.collection('orders').doc(id).update({
+          status: 'approved'
+        }) 
+       
+
+      }
+      return response
+    })
+    .catch((err) => console.log('error'));
+
+
+  res.status(200).send('ok')
+
+});
+
+app.post('/create', async (req, res) => {
+  console.log(req.body)
+  try {
+    const response = db.collection('orders').doc('123').set({
+      name: 'prueba'
+    })
+    res.send('subido')
+  } catch (error) {
+    console.log(error)
+  }
+})
+app.post('/update', async (req, res) => {
+
+  try {
+    const response = db.collection('orders').doc('123').update({
+      status: 'lpm'
+    })
+    res.send('subido')
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+app.get('/feedback', function (req, res) {
+  /*  const merchantOrder =  mercadopago.payment.findById(req.query.payment_id)
+   console.log(merchantOrder) */
   res.json({
     Payment: req.query.payment_id,
     Status: req.query.status,
     MerchantOrder: req.query.merchant_order_id,
   });
-});
-
-app.post('/Notification', function (req, res) {
- console.log(req.body)
- res.status(200).send('ok')
 });
 
 
