@@ -91,21 +91,22 @@ app.post("/checkout", (req, res) => {
     });
 });
 
+const asd = {
+  action: 'test.created',
+  api_version: 'v1',
+  application_id: '4263842648119825',
+  date_created: '2021-01-01 02:02:02 +0000 UTC',
+  id: '123456',
+  live_mode: 'false',
+  type: 'test',
+  user_id: 239337438,
+  data: { id: '123456789' }
+}
+
 app.post('/Notification', async function (req, res) {
-  /* const response = await db.collection('orders').get().then((querySnapshot) => {
-    querySnapshot.forEach((doc) => {
-        console.log(`${doc.id} => ${doc.data()}`);
-    });
-  }) */
 
- console.log(req.body)
-
-
-  const { type, data: {id}} = req.body
-  console.log(id)
-
-  axios
-    .get(`https://api.mercadopago.com/v1/payments/1669259039028`,
+axios
+    .get(`https://api.mercadopago.com/v1/payments/${req.body.data.id}`,
       {
         headers: {
           Authorization: `Bearer TEST-4263842648119825-061517-b60e93e2733eaec4605949e6274da2e3-239337438`,
@@ -113,20 +114,22 @@ app.post('/Notification', async function (req, res) {
         }
       })
     .then((response) => {
-     
-      const id = response.data.metadata.idorden
+      console.log(response)
+ const id = response.data.metadata.idorden
       if (response.data.status === 'approved') {
-       const response = db.collection('orders').doc(id).update({
+
+       const response = db.collection('orders').doc(String(id)).update({
           status: 'approved'
         }) 
        
 
-      }
+      } 
       return response
     })
-    .catch((err) => console.log('error'));
+    .catch((err) => console.log('error')); 
 
-
+   
+    
   res.status(200).send('ok')
 
 });
@@ -135,13 +138,16 @@ app.post('/create', async (req, res) => {
   console.log(req.body)
   try {
     const response = db.collection('orders').doc('123').set({
-      name: 'prueba'
+      name: 'prueba',
+      status: 'nunca'
     })
     res.send('subido')
   } catch (error) {
     console.log(error)
   }
 })
+
+
 app.post('/update', async (req, res) => {
 
   try {
