@@ -5,6 +5,11 @@ const mercadopago = require("mercadopago");
 const axios = require('axios');
 var bodyParser = require('body-parser');
 const db = require('./firebase_admin')
+const nodemailer = require('nodemailer')
+
+const accountSid = 'AC85386c3bb01703ccaf4258ad968233a3';
+const authToken = 'f0a48854e2193859ca3ebbdf536dadee';
+const client = require('twilio')(accountSid, authToken);
 
 
 // REPLACE WITH YOUR ACCESS TOKEN AVAILABLE IN: https://developers.mercadopago.com/panel
@@ -72,9 +77,9 @@ app.post("/checkout", (req, res) => {
     items: req.body,
     metadata: { idorden: req.body[0].idorden },
     back_urls: {
-      "success": "http://localhost:3000/feedback",
-      "failure": "http://localhost:3002/feedback",
-      "pending": "http://localhost:3002/feedback"
+      "success": "http://morafit.uy/ordenes/gracias",
+      "failure": "http://morafit.uy/ordenes/fail",
+      "pending": "http://morafit.uy/ordenes/pendiente",
     },
     auto_return: "approved",
     notification_url: "https://node-mora.vercel.app/Notification",
@@ -90,55 +95,91 @@ app.post("/checkout", (req, res) => {
       console.log(error);
     });
 });
+/* var prueba = { id: '1311092477' }
+console.log(prueba.id) */
 
-const asd = {
-  action: 'test.created',
-  api_version: 'v1',
-  application_id: '4263842648119825',
-  date_created: '2021-01-01 02:02:02 +0000 UTC',
-  id: '123456',
-  live_mode: 'false',
-  type: 'test',
-  user_id: 239337438,
-  data: { id: '123456789' }
-}
+
+
 
 app.post('/Notification', async function (req, res) {
 
-axios
-    .get(`https://api.mercadopago.com/v1/payments/${req.body.data.id}`,
+  try {
+    await axios.get(`https://api.mercadopago.com/v1/payments/${req.body.data.id}`,
       {
         headers: {
           Authorization: `Bearer TEST-4263842648119825-061517-b60e93e2733eaec4605949e6274da2e3-239337438`,
           'Accept-Encoding': '*'
         }
       })
-    .then((response) => {
-      console.log(response)
- const id = response.data.metadata.idorden
-      if (response.data.status === 'approved') {
+      .then((response) => {
+        const id = response.data.metadata.idorden
+        console.log(id)
+        if (response.data.status === 'approved') {
+          db.collection('orders').doc(id).update({
+            status: 'Pagado'
+          })
 
-       const response = db.collection('orders').doc(String(id)).update({
-          status: 'approved'
-        }) 
-       
+          client.messages
+            .create({
+              body: 'Alguien compro un producto por mercadopago',
+              from: 'whatsapp:+14155238886',
+              to: 'whatsapp:+59898412760'
+            })
+            .then(message => console.log(message.sid))
+            .done();
 
-      } 
-      return response
-    })
-    .catch((err) => console.log('error')); 
 
-   
-    
+        }
+        return response
+      })
+  }
+  catch (error) {
+    console.log('error')
+  };
+
+
+
   res.status(200).send('ok')
 
 });
 
+
+
+
+
+app.post('/ordencreada', async (req, res) => {
+  console.log(req.body)
+  try {
+    client.messages
+      .create({
+        body: `
+      Nuevo pedido: 
+    Nombre: ${req.body.name}
+    celular: ${req.body.phone}
+      email: ${req.body.email}
+      pickup: ${req.body.pickup} 
+      metodo: ${req.body.metodo}
+      items: ${req.body.items.map(a =>`
+      nombre: ${a.title}
+      cantidad: ${a.quantity}
+      talle: ${a.size}
+      color: ${a.color}`
+        )}
+      total: *${req.body.total}*
+      `,
+        from: 'whatsapp:+14155238886',
+        to: 'whatsapp:+59898412760'
+      })
+      .then(message => console.log(message.sid))
+      .done();
+  } catch (error) {
+    console.log(error)
+  }
+})
 app.post('/create', async (req, res) => {
   console.log(req.body)
   try {
-    const response = db.collection('orders').doc('123').set({
-      name: 'prueba',
+    const response = db.collection('orders').doc('1669781439293').set({
       status: 'nunca'
     })
     res.send('subido')
@@ -151,8 +192,8 @@ app.post('/create', async (req, res) => {
 app.post('/update', async (req, res) => {
 
   try {
-    const response = db.collection('orders').doc('123').update({
-      status: 'lpm'
+    const response = db.collection('orders').doc('1669781439293').update({
+      status: 'lpma'
     })
     res.send('subido')
   } catch (error) {
@@ -169,6 +210,27 @@ app.get('/feedback', function (req, res) {
     MerchantOrder: req.query.merchant_order_id,
   });
 });
+
+/* enviar = async () => {
+  const transporter = nodemailer.createTransport({
+    host: 'smtp.ethereal.email',
+    port: 587,
+    auth: {
+        user: 'janelle.monahan37@ethereal.email',
+        pass: 'snUMPUhHu5BJuvyFFu'
+    }
+});
+
+  const mensaje = {
+    from: 'Remitente',
+    to: 'sebagonzalez_97@hotmail.com',
+    subject: 'correoprueba',
+    text: 'envio by node js'
+  }
+
+  const info = await transporter.sendMail(mensaje)
+  console.log(info)
+} */
 
 
 
