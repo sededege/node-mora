@@ -3,12 +3,10 @@ const app = express();
 const cors = require("cors");
 const mercadopago = require("mercadopago");
 const axios = require('axios');
-var bodyParser = require('body-parser');
 const db = require('./firebase_admin')
-const nodemailer = require('nodemailer')
 
 const accountSid = 'AC85386c3bb01703ccaf4258ad968233a3';
-const authToken = 'f0a48854e2193859ca3ebbdf536dadee';
+const authToken = '08ed077a854681c3d0a20c30bbf1c2cc';
 const client = require('twilio')(accountSid, authToken);
 
 
@@ -19,7 +17,7 @@ mercadopago.configure({
 const token = 'TEST-4263842648119825-061517-b60e93e2733eaec4605949e6274da2e3-239337438'
 
 
-
+const url = 'https://decb-167-61-153-180.sa.ngrok.io'
 
 
 app.use(express.urlencoded({ extended: false }));
@@ -82,7 +80,7 @@ app.post("/checkout", (req, res) => {
       "pending": "http://morafit.uy/ordenes/pendiente",
     },
     auto_return: "approved",
-    notification_url: "https://node-mora.vercel.app/Notification",
+    notification_url: `${url}/Notification`,
     statement_descriptor: "MORAUY",
   };
 
@@ -119,15 +117,15 @@ app.post('/Notification', async function (req, res) {
             status: 'Pagado'
           })
 
-          client.messages
-            .create({
-              body: 'Alguien compro un producto por mercadopago',
-              from: 'whatsapp:+14155238886',
-              to: 'whatsapp:+59898412760'
-            })
-            .then(message => console.log(message.sid))
-            .done();
-
+          /*     client.messages
+                .create({
+                  body: 'Alguien compro un producto por mercadopago',
+                  from: 'whatsapp:+19896324694',
+                  to: 'whatsapp:+59898412760'
+                })
+                .then(message => console.log(message.sid))
+                .done();
+     */
 
         }
         return response
@@ -159,7 +157,7 @@ app.post('/ordencreada', async (req, res) => {
       email: ${req.body.email}
       pickup: ${req.body.pickup} 
       metodo: ${req.body.metodo}
-      items: ${req.body.items.map(a =>`
+      items: ${req.body.items.map(a => `
       nombre: ${a.title}
       cantidad: ${a.quantity}
       talle: ${a.size}
@@ -176,6 +174,8 @@ app.post('/ordencreada', async (req, res) => {
     console.log(error)
   }
 })
+
+
 app.post('/create', async (req, res) => {
   console.log(req.body)
   try {
