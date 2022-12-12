@@ -17,7 +17,7 @@ mercadopago.configure({
 const token = 'TEST-4263842648119825-061517-b60e93e2733eaec4605949e6274da2e3-239337438'
 
 
-const url = 'https://www.morafit.uy'
+const url = 'https://node-mora.vercel.app'
 
 
 app.use(express.urlencoded({ extended: false }));
