@@ -12,7 +12,7 @@ const client = require('twilio')(accountSid, authToken);
 
 // REPLACE WITH YOUR ACCESS TOKEN AVAILABLE IN: https://developers.mercadopago.com/panel
 mercadopago.configure({
-  access_token: "TEST-4263842648119825-061517-b60e93e2733eaec4605949e6274da2e3-239337438",
+  access_token: "APP_USR-5858371020950663-121218-ba47d0d043e0b66f74aa24c6918cc5dd-292976535",
 });
 const token = 'TEST-4263842648119825-061517-b60e93e2733eaec4605949e6274da2e3-239337438'
 
@@ -105,7 +105,7 @@ app.post('/Notification', async function (req, res) {
     await axios.get(`https://api.mercadopago.com/v1/payments/${req.body.data.id}`,
       {
         headers: {
-          Authorization: `Bearer TEST-4263842648119825-061517-b60e93e2733eaec4605949e6274da2e3-239337438`,
+          Authorization: `Bearer APP_USR-5858371020950663-121218-ba47d0d043e0b66f74aa24c6918cc5dd-292976535`,
           'Accept-Encoding': '*'
         }
       })
