@@ -14,7 +14,6 @@ const client = require('twilio')(accountSid, authToken);
 mercadopago.configure({
   access_token: "APP_USR-5858371020950663-121218-ba47d0d043e0b66f74aa24c6918cc5dd-292976535",
 });
-const token = 'TEST-4263842648119825-061517-b60e93e2733eaec4605949e6274da2e3-239337438'
 
 
 const url = 'https://node-mora-adbi7fdpf-sededege.vercel.app'
