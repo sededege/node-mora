@@ -16,7 +16,7 @@ mercadopago.configure({
 });
 
 
-const url = 'https://node-mora-adbi7fdpf-sededege.vercel.app'
+const url = 'https://nodemora.herokuapp.com'
 
 
 app.use(express.urlencoded({ extended: false }));
