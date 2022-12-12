@@ -17,7 +17,7 @@ mercadopago.configure({
 const token = 'TEST-4263842648119825-061517-b60e93e2733eaec4605949e6274da2e3-239337438'
 
 
-const url = 'https://node-mora.vercel.app'
+const url = 'https://node-mora-adbi7fdpf-sededege.vercel.app'
 
 
 app.use(express.urlencoded({ extended: false }));
@@ -192,7 +192,7 @@ app.post('/create', async (req, res) => {
 app.post('/update', async (req, res) => {
 
   try {
-    const response = db.collection('orders').doc('1669781439293').update({
+    const response = db.collection('orders').doc('1670850559755').update({
       status: 'lpma'
     })
     res.send('subido')
