@@ -4,15 +4,19 @@ const cors = require("cors");
 const mercadopago = require("mercadopago");
 const axios = require('axios');
 const db = require('./firebase_admin')
+require('dotenv').config();
 
-const accountSid = 'AC85386c3bb01703ccaf4258ad968233a3';
-const authToken = '08ed077a854681c3d0a20c30bbf1c2cc';
+console.log(process.env.MERCADOPAGO_ACCESS_TOKEN)
+
+
+const accountSid = process.env.ACCOUNT_SID;
+const authToken = process.env.AUTHTOKEN;
 const client = require('twilio')(accountSid, authToken);
 
 
 // REPLACE WITH YOUR ACCESS TOKEN AVAILABLE IN: https://developers.mercadopago.com/panel
 mercadopago.configure({
-  access_token: "APP_USR-5858371020950663-121218-ba47d0d043e0b66f74aa24c6918cc5dd-292976535",
+  access_token: process.env.MERCADOPAGO_ACCESS_TOKEN,
 });
 
 

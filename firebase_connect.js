@@ -1,14 +1,14 @@
 const firebase = require('firebase')
 
 const firebaseConfig = {
-    apiKey: "AIzaSyB-xm6vR1lAW_afQip14wEpszXvHvNmshw",
-    authDomain: "eccomerceapp-4c533.firebaseapp.com",
-    databaseURL: "https://eccomerceapp-4c533.firebaseio.com",
-    projectId: "eccomerceapp-4c533",
-    storageBucket: "eccomerceapp-4c533.appspot.com",
-    messagingSenderId: "882407440548",
-    appId: "1:882407440548:web:74b4ff94fb2e34d9356631",
-    measurementId: "G-4JPVRY2C3F"
+    apiKey: process.env.apiKey_token,
+    authDomain: process.env.authDomain_token,
+    databaseURL: process.env.databaseURL_token,
+    projectId: process.env.projectId_token,
+    storageBucket: process.env.storageBucket_token,
+    messagingSenderId: process.env.messagingSenderId_token,
+    appId: process.env.appId_token,
+    measurementId: process.env.measurementId_token
   };
   
 
