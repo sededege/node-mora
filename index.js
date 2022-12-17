@@ -170,7 +170,7 @@ app.post('/ordencreada', async (req, res) => {
       total: *${req.body.total}*
       `,
         from: 'whatsapp:+14155238886',
-        to: 'whatsapp:+59898412760'
+        to: 'whatsapp:+59898626100'
       })
       .then(message => console.log(message.sid))
       .done();
