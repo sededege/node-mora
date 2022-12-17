@@ -16,11 +16,12 @@ const client = require('twilio')(accountSid, authToken);
 
 // REPLACE WITH YOUR ACCESS TOKEN AVAILABLE IN: https://developers.mercadopago.com/panel
 mercadopago.configure({
-  access_token: process.env.MERCADOPAGO_ACCESS_TOKEN,
+  access_token:process.env.MERCADOPAGO_ACCESS_TOKEN,
 });
 
 
-const url = 'https://nodemora.herokuapp.com'
+/* const url = 'https://nodemora.herokuapp.com'
+ */const url = 'https://d036-2800-a4-1439-3300-94bd-a7fa-a0f8-a6c0.sa.ngrok.io'
 
 
 app.use(express.urlencoded({ extended: false }));
