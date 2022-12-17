@@ -20,9 +20,9 @@ mercadopago.configure({
 });
 
 
-/* const url = 'https://nodemora.herokuapp.com'
- */const url = 'https://d036-2800-a4-1439-3300-94bd-a7fa-a0f8-a6c0.sa.ngrok.io'
-
+const url = 'https://nodemora.herokuapp.com'
+/* const url = 'https://d036-2800-a4-1439-3300-94bd-a7fa-a0f8-a6c0.sa.ngrok.io'
+ */
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
